@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七一报社 - 管理页面</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f8ff;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            background-color: #1e90ff;
+            color: white;
+            padding: 20px 0;
+            text-align: center;
+            margin-bottom: 30px;
+            border-radius: 5px;
+        }
+        
+        h1 {
+            margin-bottom: 10px;
+        }
+        
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #1e90ff;
+        }
+        
+        .tab-button {
+            background-color: #e6f2ff;
+            border: none;
+            padding: 15px 20px;
+            cursor: pointer;
+            font-size: 16px;
+            color: #1e90ff;
+            font-weight: bold;
+            transition: all 0.3s;
+        }
+        
+        .tab-button.active {
+            background-color: #1e90ff;
+            color: white;
+        }
+        
+        .tab-content {
+            display: none;
+            background-color: white;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+        }
+        
+        .tab-content.active {
+            display: block;
+        }
+        
+        .form-group {
+            margin-bottom: 20px;
+        }
+        
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #1e90ff;
+        }
+        
+        input, textarea, select {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        textarea {
+            min-height: 150px;
+            resize: vertical;
+        }
+        
+        button {
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            cursor: pointer;
+            border-radius: 4px;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+        }
+        
+        button:hover {
+            background-color: #4169e1;
+        }
+        
+        .security-code {
+            background-color: #fff3cd;
+            border: 1px solid #ffeaa7;
+            padding: 15px;
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+        
+        .file-list {
+            margin-top: 20px;
+        }
+        
+        .file-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .file-item:nth-child(odd) {
+            background-color: #f9f9f9;
+        }
+        
+        .delete-btn {
+            background-color: #dc3545;
+            padding: 5px 10px;
+            font-size: 14px;
+        }
+        
+        .delete-btn:hover {
+            background-color: #c82333;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1e90ff;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 20px;
+            color: #666;
+            font-size: 14px;
+        }
+        
+        .message {
+            padding: 10px;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
+        
+        .message.success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+        
+        .message.error {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+        
+        .message.info {
+            background-color: #d1ecf1;
+            color: #0c5460;
+            border: 1px solid #bee5eb;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>七一报社管理页面</h1>
+            <p>发布和管理新闻、漫画、视频内容</p>
+            <button id="logout-btn" style="float: right; margin-top: -30px; background-color: #dc3545; color: white; border: none; padding: 8px 15px; border-radius: 4px; cursor: pointer;">登出</button>
+        </header>
+        
+        <a href="index.html" class="back-link">← 返回首页</a>
+        
+        <div class="security-code">
+            <p><strong>安全提醒：</strong>所有操作前需要输入安全码 <code>114514</code></p>
+        </div>
+        
+        <div class="tabs">
+            <button class="tab-button active" data-tab="news">新闻发布</button>
+            <button class="tab-button" data-tab="manage">内容管理</button>
+        </div>
+        
+        <!-- 修改新闻发布表单 -->
+        <div id="news-tab" class="tab-content active">
+            <h2>发布新闻</h2>
+            <div id="news-message" class="message" style="display:none;"></div>
+            <form id="news-form" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="news-title">新闻标题</label>
+                    <input type="text" id="news-title" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="news-content">新闻内容</label>
+                    <textarea id="news-content" required></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="news-files">上传图片/视频 (可选，支持多选)</label>
+                    <input type="file" id="news-files" accept="image/*,video/*" multiple>
+                </div>
+
+                <div class="form-group">
+                    <label for="news-security">安全码</label>
+                    <input type="password" id="news-security" required>
+                </div>
+
+                <button type="submit">发布新闻</button>
+            </form>
+        </div>
+        
+        <!-- 内容管理 -->
+        <div id="manage-tab" class="tab-content">
+            <h2>内容管理</h2>
+            <div id="manage-message" class="message" style="display:none;"></div>
+            
+            <div class="form-group">
+                <label for="manage-security">安全码</label>
+                <input type="password" id="manage-security" required>
+            </div>
+            
+            <button id="load-content">加载内容列表</button>
+            
+            <div class="file-list" id="file-list">
+                <p>请输入安全码并点击"加载内容列表"查看现有内容</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>七一报社内容管理系统</p>
+        </footer>
+    </div>
+
+    <script>
+        // Tab切换功能
+        document.querySelectorAll('.tab-button').forEach(button => {
+            button.addEventListener('click', () => {
+                // 移除所有活动状态
+                document.querySelectorAll('.tab-button').forEach(btn => {
+                    btn.classList.remove('active');
+                });
+                document.querySelectorAll('.tab-content').forEach(content => {
+                    content.classList.remove('active');
+                });
+                
+                // 添加活动状态到当前选项
+                button.classList.add('active');
+                const tabId = button.getAttribute('data-tab');
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+            });
+        });
+        
+        // 显示消息函数
+        function showMessage(elementId, message, type) {
+            const messageElement = document.getElementById(elementId);
+            messageElement.textContent = message;
+            messageElement.className = 'message ' + type;
+            messageElement.style.display = 'block';
+            
+            // 3秒后自动隐藏消息
+            setTimeout(() => {
+                messageElement.style.display = 'none';
+            }, 3000);
+        }
+        
+        // 新闻发布表单提交
+        // 修改新闻发布表单提交处理
+        document.getElementById('news-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const title = document.getElementById('news-title').value;
+            const content = document.getElementById('news-content').value;
+            const files = document.getElementById('news-files').files;
+            const securityCode = document.getElementById('news-security').value;
+
+            const formData = new FormData();
+            formData.append('title', title);
+            formData.append('content', content);
+            formData.append('security_code', securityCode);
+
+            // 添加文件到表单
+            for (let i = 0; i < files.length; i++) {
+                formData.append('files', files[i]);
+            }
+
+            // 发送到后端
+            fetch('/api/news', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showMessage('news-message', data.error, 'error');
+                } else {
+                    showMessage('news-message', `新闻已发布：${data.message}`, 'success');
+                    // 重置表单
+                    document.getElementById('news-form').reset();
+                }
+            })
+            .catch(error => {
+                showMessage('news-message', '发布失败：' + error.message, 'error');
+            });
+        });
+        
+        
+        
+        // 加载内容列表
+        document.getElementById('load-content').addEventListener('click', function() {
+            const securityCode = document.getElementById('manage-security').value;
+            
+            if (!securityCode) {
+                showMessage('manage-message', '请输入安全码！', 'error');
+                return;
+            }
+            
+            // 从后端获取文件列表
+            fetch(`/api/files?security_code=${securityCode}`)
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showMessage('manage-message', data.error, 'error');
+                    document.getElementById('file-list').innerHTML = '<p>加载失败</p>';
+                } else {
+                    showMessage('manage-message', '内容列表加载成功', 'success');
+                    let fileListHTML = '';
+                    
+                    // 显示新闻
+                    if (data.news.length > 0) {
+                        fileListHTML += '<h3>新闻</h3>';
+                        data.news.forEach(item => {
+                            fileListHTML += `
+                                <div class="file-item">
+                                    <span>${item.title} (${item.id}) - ${item.date}</span>
+                                    <button class="delete-btn" data-file="${item.id}">删除</button>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    // 显示漫画
+                    if (data.comics.length > 0) {
+                        fileListHTML += '<h3>漫画</h3>';
+                        data.comics.forEach(item => {
+                            fileListHTML += `
+                                <div class="file-item">
+                                    <span>${item.title} (${item.id}) - ${item.date}</span>
+                                    <button class="delete-btn" data-file="${item.id}">删除</button>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    // 显示视频
+                    if (data.videos.length > 0) {
+                        fileListHTML += '<h3>视频</h3>';
+                        data.videos.forEach(item => {
+                            fileListHTML += `
+                                <div class="file-item">
+                                    <span>${item.title} (${item.id}) - ${item.date}</span>
+                                    <button class="delete-btn" data-file="${item.id}">删除</button>
+                                </div>
+                            `;
+                        });
+                    }
+                    
+                    if (data.news.length === 0 && data.comics.length === 0 && data.videos.length === 0) {
+                        fileListHTML = '<p>暂无内容</p>';
+                    }
+                    
+                    document.getElementById('file-list').innerHTML = fileListHTML;
+                    
+                    // 为删除按钮添加事件监听器
+                    document.querySelectorAll('.delete-btn').forEach(button => {
+                        button.addEventListener('click', function() {
+                            const fileName = this.getAttribute('data-file');
+                            if (confirm(`确定要删除文件 "${fileName}" 吗？`)) {
+                                // 发送删除请求到后端
+                                fetch(`/api/files/${fileName}`, {
+                                    method: 'DELETE',
+                                    headers: {
+                                        'Content-Type': 'application/json'
+                                    },
+                                    body: JSON.stringify({
+                                        security_code: securityCode
+                                    })
+                                })
+                                .then(response => response.json())
+                                .then(data => {
+                                    if (data.error) {
+                                        showMessage('manage-message', data.error, 'error');
+                                    } else {
+                                        showMessage('manage-message', data.message, 'success');
+                                        // 重新加载文件列表
+                                        document.getElementById('load-content').click();
+                                    }
+                                })
+                                .catch(error => {
+                                    showMessage('manage-message', '删除失败：' + error.message, 'error');
+                                });
+                            }
+                        });
+                    });
+                }
+            })
+            .catch(error => {
+                showMessage('manage-message', '加载失败：' + error.message, 'error');
+                document.getElementById('file-list').innerHTML = '<p>加载失败</p>';
+            });
+        });
+
+        document.getElementById('logout-btn').addEventListener('click', function() {
+            if (confirm('确定要登出吗？')) {
+                fetch('/api/logout', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    // 登出成功，跳转到登录页面
+                    window.location.href = '/login';
+                })
+                .catch(error => {
+                    alert('登出失败：' + error.message);
+                });
+            }
+        });
+
+        // 检查登录状态
+        fetch('/api/check-login')
+        .then(response => {
+            if (response.status === 401) {
+                // 未登录，跳转到登录页面
+                window.location.href = '/login';
+            }
+        })
+        .catch(error => {
+            console.error('检查登录状态失败：', error);
+        });
+
+    </script>
+</body>
+</html>

@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七一报社</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f8ff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #1e90ff;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #4682b4;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .date {
+            font-size: 14px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            background-color: #4169e1;
+        }
+        
+        nav ul li {
+            position: relative;
+        }
+        
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #1e90ff;
+        }
+        
+        /* 搜索框 */
+        .search-container {
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #1e90ff;
+            border-radius: 25px;
+            outline: none;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .section-title {
+            border-left: 4px solid #1e90ff;
+            padding-left: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #1e90ff;
+        }
+        
+        /* 新闻列表 */
+        .news-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .news-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .news-title a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .news-title a:hover {
+            color: #1e90ff;
+        }
+        
+        .news-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .news-excerpt {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .news-content-full {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #1e90ff;
+            display: none;
+        }
+        
+        .toggle-content {
+            color: #1e90ff;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        
+        .toggle-content:hover {
+            text-decoration: underline;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .sidebar-box {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        
+        .hot-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .hot-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .hot-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1e90ff;
+            margin-right: 10px;
+            line-height: 1;
+        }
+        
+        .hot-content a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .hot-content a:hover {
+            color: #1e90ff;
+        }
+        
+        .hot-content .meta {
+            font-size: 12px;
+            color: #999;
+            margin: 5px 0 0;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: #1e90ff;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-column ul li a {
+            color: #e6f2ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #fff;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #4682b4;
+            color: #e6f2ff;
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            nav ul li a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 管理链接 */
+        .admin-link {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .admin-link a {
+            display: inline-block;
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .admin-link a:hover {
+            background-color: #4169e1;
+        }
+        
+        /* 加载提示 */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        /* 搜索结果 */
+        .search-results-info {
+            background-color: #e6f2ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">七一报社</div>
+                <div class="date" id="current-date">2023年10月15日 星期日</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="#">首页</a></li>
+                    <li><a href="#news">新闻</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 搜索框 -->
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-box" id="search-input" placeholder="搜索新闻标题或内容...">
+        </div>
+    </div>
+
+    <!-- 主要内容 -->
+    <div class="container">
+        <div class="main-content">
+            <div class="content">
+                <!-- 新闻区域 -->
+                <div class="section" id="news">
+                    <h2 class="section-title">新闻</h2>
+                    <div id="search-results-info" class="search-results-info" style="display: none;"></div>
+                    <div class="news-list" id="news-list">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="sidebar-box">
+                    <h2 class="section-title">最新内容</h2>
+                    <div id="latest-content">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>内容分类</h3>
+                    <ul>
+                        <li><a href="#news">新闻</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <ul>
+                        <li><a href="#">报社简介</a></li>
+                        <li><a href="#">联系方式</a></li>
+                        <li><a href="#">版权声明</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>联系方式</h3>
+                    <ul>
+                        <li>站主邮箱：liruili012341@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 七一报社 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 动态显示当前日期
+        function updateDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const dayOfWeek = days[now.getDay()];
+            
+            document.getElementById('current-date').textContent = 
+                `${year}年${month}月${day}日 ${dayOfWeek}`;
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadContent();
+            
+            // 添加搜索功能
+            document.getElementById('search-input').addEventListener('input', function() {
+                const searchTerm = this.value.trim();
+                if (searchTerm.length > 0) {
+                    searchNews(searchTerm);
+                } else {
+                    // 如果搜索框为空，重新加载所有内容
+                    loadContent();
+                }
+            });
+        });
+        
+        // 从服务器加载内容
+        function loadContent() {
+            fetch('/api/files?security_code=114514')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.querySelectorAll('.loading').forEach(el => {
+                        el.textContent = '加载失败: ' + data.error;
+                    });
+                    return;
+                }
+                
+                // 加载新闻
+                loadNews(data.news);
+                
+                // 加载最新内容
+                loadLatestContent(data);
+            })
+            .catch(error => {
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.textContent = '加载失败: ' + error.message;
+                });
+            });
+        }
+        
+        // 搜索新闻
+        function searchNews(term) {
+            fetch('/api/files?security_code=114514')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('news-list').innerHTML = '<p>搜索失败: ' + data.error + '</p>';
+                    return;
+                }
+                
+                // 过滤新闻
+                const filteredNews = data.news.filter(news => {
+                    // 检查标题和内容是否包含搜索词
+                    return news.title.toLowerCase().includes(term.toLowerCase()) || 
+                           (news.content && news.content.toLowerCase().includes(term.toLowerCase()));
+                });
+                
+                // 显示搜索结果信息
+                const searchInfo = document.getElementById('search-results-info');
+                searchInfo.textContent = `找到 ${filteredNews.length} 条相关新闻`;
+                searchInfo.style.display = 'block';
+                
+                // 显示搜索结果
+                loadNews(filteredNews);
+            })
+            .catch(error => {
+                document.getElementById('news-list').innerHTML = '<p>搜索失败: ' + error.message + '</p>';
+            });
+        }
+        
+        // 加载新闻
+        function loadNews(newsList) {
+            const newsContainer = document.getElementById('news-list');
+
+            if (newsList.length === 0) {
+                newsContainer.innerHTML = '<p>暂无新闻</p>';
+                return;
+            }
+
+            let newsHTML = '';
+            newsList.slice(0, 10).forEach(news => {
+                // 截取内容前100个字符作为摘要
+                const excerpt = news.content ? news.content.substring(0, 100) + (news.content.length > 100 ? '...' : '') : '';
+                
+                newsHTML += `
+                    <div class="news-item">
+                        <h3 class="news-title"><a href="/news/${news.id}">${news.title}</a></h3>
+                        <div class="news-meta">${news.date}</div>
+                        <div class="news-excerpt">${excerpt}</div>
+                        ${news.content && news.content.length > 100 ? 
+                            `<div class="news-content-full" id="content-${news.id}">${news.content}</div>
+                             <div class="toggle-content" onclick="toggleContent('${news.id}')">展开全文 ▼</div>` : ''}
+                    </div>
+                `;
+            });
+
+            newsContainer.innerHTML = newsHTML;
+        }
+        
+        // 切换内容显示/隐藏
+        function toggleContent(newsId) {
+            const contentElement = document.getElementById(`content-${newsId}`);
+            const toggleElement = contentElement.nextElementSibling;
+            
+            if (contentElement.style.display === 'none' || contentElement.style.display === '') {
+                contentElement.style.display = 'block';
+                toggleElement.textContent = '收起全文 ▲';
+            } else {
+                contentElement.style.display = 'none';
+                toggleElement.textContent = '展开全文 ▼';
+            }
+        }
+
+        // 加载最新内容
+        function loadLatestContent(data) {
+            const latestContainer = document.getElementById('latest-content');
+            
+            // 只处理新闻
+            const allContent = [
+                ...data.news.map(item => ({...item, type: '新闻'}))
+            ];
+            
+            // 按时间倒序排序
+            allContent.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+            
+            if (allContent.length === 0) {
+                latestContainer.innerHTML = '<p>暂无内容</p>';
+                return;
+            }
+            
+            let latestHTML = '';
+            allContent.slice(0, 5).forEach((item, index) => {
+                latestHTML += `
+                    <div class="hot-item">
+                        <div class="hot-number">${index + 1}</div>
+                        <div class="hot-content">
+                            <div><a href="/news/${item.id}">${item.title}</a></div>
+                            <div class="meta">${item.type} · ${item.date}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            latestContainer.innerHTML = latestHTML;
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,35 @@
+{
+  "news": [
+    {
+      "id": "news_20250830194353.txt",
+      "title": "test",
+      "date": "2025-08-30 19:43",
+      "timestamp": "20250830194353",
+      "media_files": [
+        "media_20250830194353_eil53r.png"
+      ]
+    }
+  ],
+  "comics": [
+    {
+      "id": "comic_001.jpeg",
+      "title": "111",
+      "date": "2025-08-09 15:37",
+      "timestamp": "20250809153718"
+    },
+    {
+      "id": "comic_002.JPG",
+      "title": "1",
+      "date": "2025-08-09 15:41",
+      "timestamp": "20250809154152"
+    }
+  ],
+  "videos": [
+    {
+      "id": "video_001.MP4",
+      "title": "111",
+      "date": "2025-08-09 15:38",
+      "timestamp": "20250809153813"
+    }
+  ]
+}

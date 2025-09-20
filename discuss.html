@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论坛 - 七一报社</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f8ff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #1e90ff;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #4682b4;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .date {
+            font-size: 14px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            background-color: #4169e1;
+        }
+        
+        nav ul li {
+            position: relative;
+        }
+        
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #1e90ff;
+        }
+        
+        .main-content {
+            margin: 20px 0;
+        }
+        
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .section-title {
+            border-left: 4px solid #1e90ff;
+            padding-left: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #1e90ff;
+        }
+        
+        /* 发帖表单 */
+        .post-form {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #4169e1;
+        }
+        
+        /* 帖子列表 */
+        .post-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .post-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .post-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #1e90ff;
+        }
+        
+        .post-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .post-content {
+            margin-bottom: 10px;
+        }
+        
+        .post-author {
+            font-weight: bold;
+        }
+        
+        /* 回复区域 */
+        .replies-section {
+            margin-top: 20px;
+            padding-left: 20px;
+            border-left: 2px solid #1e90ff;
+        }
+        
+        .reply-form {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .reply-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        
+        .reply-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1e90ff;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            nav ul li a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">七一报社</div>
+                <div class="date" id="current-date">2023年10月15日 星期日</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="#discuss">论坛</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <div class="container">
+        <div class="main-content">
+            <div class="section" id="discuss">
+                <a href="/" class="back-link">← 返回首页</a>
+                <h2 class="section-title">论坛讨论区</h2>
+                
+                <!-- 发帖表单 -->
+                <div class="post-form">
+                    <h3>发表新帖</h3>
+                    <div class="form-group">
+                        <label for="author">昵称：</label>
+                        <input type="text" id="author" placeholder="请输入您的昵称">
+                    </div>
+                    <div class="form-group">
+                        <label for="title">标题：</label>
+                        <input type="text" id="title" placeholder="请输入帖子标题">
+                    </div>
+                    <div class="form-group">
+                        <label for="content">内容：</label>
+                        <textarea id="content" placeholder="请输入帖子内容"></textarea>
+                    </div>
+                    <button class="btn" id="submit-post">发表帖子</button>
+                </div>
+                
+                <!-- 帖子列表 -->
+                <div class="posts-list">
+                    <h3>最新帖子</h3>
+                    <div id="posts-container">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 动态显示当前日期
+        function updateDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const dayOfWeek = days[now.getDay()];
+            
+            document.getElementById('current-date').textContent = 
+                `${year}年${month}月${day}日 ${dayOfWeek}`;
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadPosts();
+            
+            // 绑定发表帖子按钮事件
+            document.getElementById('submit-post').addEventListener('click', submitPost);
+        });
+        
+        // 提交新帖子
+        function submitPost() {
+            const author = document.getElementById('author').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+            
+            if (!author || !title || !content) {
+                alert('请填写完整的帖子信息');
+                return;
+            }
+            
+            const postData = {
+                author: author,
+                title: title,
+                content: content,
+                date: new Date().toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
+            
+            fetch('/api/discuss', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('发表失败: ' + data.error);
+                } else {
+                    alert('发表成功');
+                    // 清空表单
+                    document.getElementById('author').value = '';
+                    document.getElementById('title').value = '';
+                    document.getElementById('content').value = '';
+                    // 重新加载帖子列表
+                    loadPosts();
+                }
+            })
+            .catch(error => {
+                alert('发表失败: ' + error.message);
+            });
+        }
+        
+        // 加载帖子列表
+        function loadPosts() {
+            fetch('/api/discuss')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('posts-container').innerHTML = '<p>加载失败: ' + data.error + '</p>';
+                    return;
+                }
+                
+                renderPosts(data.posts);
+            })
+            .catch(error => {
+                document.getElementById('posts-container').innerHTML = '<p>加载失败: ' + error.message + '</p>';
+            });
+        }
+        
+        // 渲染帖子列表
+        function renderPosts(posts) {
+            const container = document.getElementById('posts-container');
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<p>暂无论坛帖子</p>';
+                return;
+            }
+            
+            let html = '';
+            posts.forEach(post => {
+                html += `
+                    <div class="post-item">
+                        <h3 class="post-title">${post.title}</h3>
+                        <div class="post-meta">
+                            <span class="post-author">${post.author}</span> 发表于 ${post.date}
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+    </script>
+</body>
+</html>

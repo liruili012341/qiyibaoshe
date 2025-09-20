@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史新闻 - 七一报社</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f8ff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #1e90ff;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #4682b4;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            background-color: #4169e1;
+        }
+        
+        nav ul li {
+            position: relative;
+        }
+        
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #1e90ff;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            margin: 20px 0;
+        }
+        
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .section-title {
+            border-left: 4px solid #1e90ff;
+            padding-left: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #1e90ff;
+        }
+        
+        /* 网格布局展示新闻 */
+        .news-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+        }
+        
+        .news-card {
+            border: 1px solid #eee;
+            border-radius: 5px;
+            padding: 15px;
+            background-color: #fafafa;
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .news-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .news-title {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+        
+        .news-title a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .news-title a:hover {
+            color: #1e90ff;
+        }
+        
+        .news-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .news-excerpt {
+            color: #666;
+            font-size: 14px;
+        }
+        
+        /* 返回首页按钮 */
+        .back-to-home {
+            display: inline-block;
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+            margin-bottom: 20px;
+        }
+        
+        .back-to-home:hover {
+            background-color: #4169e1;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .news-grid {
+                grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            nav ul li a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .news-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 加载提示 */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">七一报社</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="/discuss">论坛</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <div class="container">
+        <a href="/" class="back-to-home">← 返回首页</a>
+        
+        <div class="main-content">
+            <div class="section">
+                <h2 class="section-title">历史新闻</h2>
+                <div class="news-grid" id="news-grid">
+                    <div class="loading">加载中...</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            loadNews();
+        });
+        
+        // 从服务器加载新闻
+        function loadNews() {
+            fetch('/api/files?security_code=114514')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('news-grid').innerHTML = '<p>加载失败: ' + data.error + '</p>';
+                    return;
+                }
+                
+                displayNews(data.news);
+            })
+            .catch(error => {
+                document.getElementById('news-grid').innerHTML = '<p>加载失败: ' + error.message + '</p>';
+            });
+        }
+        
+        // 展示新闻
+        function displayNews(newsList) {
+            const newsGrid = document.getElementById('news-grid');
+            
+            if (newsList.length === 0) {
+                newsGrid.innerHTML = '<p>暂无新闻</p>';
+                return;
+            }
+            
+            let newsHTML = '';
+            newsList.forEach(news => {
+                // 截取内容前100个字符作为摘要
+                const excerpt = news.content ? news.content.substring(0, 100) + (news.content.length > 100 ? '...' : '') : '';
+                
+                newsHTML += `
+                    <div class="news-card">
+                        <h3 class="news-title"><a href="/news/${news.id}">${news.title}</a></h3>
+                        <div class="news-meta">${news.date}</div>
+                        <div class="news-excerpt">${excerpt}</div>
+                    </div>
+                `;
+            });
+            
+            newsGrid.innerHTML = newsHTML;
+        }
+    </script>
+</body>
+</html>

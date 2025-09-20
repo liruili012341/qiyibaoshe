@@ -319,6 +319,26 @@
             background-color: #4169e1;
         }
         
+        /* 查看所有新闻链接 */
+        .view-all-news {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .view-all-link {
+            display: inline-block;
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .view-all-link:hover {
+            background-color: #4169e1;
+        }
+
         /* 加载提示 */
         .loading {
             text-align: center;
@@ -348,6 +368,8 @@
                 <ul>
                     <li><a href="#">首页</a></li>
                     <li><a href="#news">新闻</a></li>
+                    <li><a href="/discuss">论坛</a></li>
+                    <li><a href="/history">历史新闻</a></li>
                 </ul>
             </nav>
         </div>
@@ -371,6 +393,9 @@
                     <div class="news-list" id="news-list">
                         <div class="loading">加载中...</div>
                     </div>
+                    <div class="view-all-news" id="view-all-news" style="display: none; text-align: center; margin-top: 20px;">
+                        <a href="/history" class="view-all-link">查看所有新闻 →</a>
+                    </div>
                 </div>
             </div>
             
@@ -379,6 +404,14 @@
                 <div class="sidebar-box">
                     <h2 class="section-title">最新内容</h2>
                     <div id="latest-content">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+                
+                <!-- 广告区域 -->
+                <div class="sidebar-box">
+                    <h2 class="section-title">友情链接</h2>
+                    <div id="ads-content">
                         <div class="loading">加载中...</div>
                     </div>
                 </div>
@@ -393,7 +426,7 @@
                 <div class="footer-column">
                     <h3>内容分类</h3>
                     <ul>
-                        <li><a href="#news">新闻</a></li>
+                        <li><a href="./admin">写新闻</a></li>
                     </ul>
                 </div>
                 <div class="footer-column">
@@ -506,14 +539,18 @@
         // 加载新闻
         function loadNews(newsList) {
             const newsContainer = document.getElementById('news-list');
+            const viewAllNews = document.getElementById('view-all-news');
 
             if (newsList.length === 0) {
                 newsContainer.innerHTML = '<p>暂无新闻</p>';
                 return;
             }
 
+            // 只显示最近10条新闻
+            const displayNews = newsList.slice(0, 10);
+            
             let newsHTML = '';
-            newsList.slice(0, 10).forEach(news => {
+            displayNews.forEach(news => {
                 // 截取内容前100个字符作为摘要
                 const excerpt = news.content ? news.content.substring(0, 100) + (news.content.length > 100 ? '...' : '') : '';
                 
@@ -530,6 +567,13 @@
             });
 
             newsContainer.innerHTML = newsHTML;
+            
+            // 如果总新闻数超过10条，显示"查看所有新闻"按钮
+            if (newsList.length > 10) {
+                viewAllNews.style.display = 'block';
+            } else {
+                viewAllNews.style.display = 'none';
+            }
         }
         
         // 切换内容显示/隐藏
@@ -546,7 +590,7 @@
             }
         }
 
-        // 加载最新内容
+// 加载最新内容
         function loadLatestContent(data) {
             const latestContainer = document.getElementById('latest-content');
             
@@ -578,6 +622,59 @@
             
             latestContainer.innerHTML = latestHTML;
         }
+        
+        // 加载广告
+        function loadAds() {
+            fetch('/api/ads')
+            .then(response => response.json())
+            .then(data => {
+                const adsContainer = document.getElementById('ads-content');
+                
+                if (data.error) {
+                    adsContainer.innerHTML = '<p>加载失败</p>';
+                    return;
+                }
+                
+                if (data.ads.length === 0) {
+                    adsContainer.innerHTML = '<p>暂无广告</p>';
+                    return;
+                }
+                
+                let adsHTML = '';
+                data.ads.forEach(ad => {
+                    adsHTML += `
+                        <div class="hot-item">
+                            <div class="hot-content">
+                                <div><a href="${ad.link}" target="_blank">${ad.text}</a></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                adsContainer.innerHTML = adsHTML;
+            })
+            .catch(error => {
+                document.getElementById('ads-content').innerHTML = '<p>加载失败</p>';
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadContent();
+            loadAds(); // 加载广告
+            
+            // 添加搜索功能
+            document.getElementById('search-input').addEventListener('input', function() {
+                const searchTerm = this.value.trim();
+                if (searchTerm.length > 0) {
+                    searchNews(searchTerm);
+                } else {
+                    // 如果搜索框为空，重新加载所有内容
+                    loadContent();
+                }
+            });
+        });
     </script>
 </body>
 </html>

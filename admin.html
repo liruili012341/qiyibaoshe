@@ -111,14 +111,6 @@
             background-color: #4169e1;
         }
         
-        .security-code {
-            background-color: #fff3cd;
-            border: 1px solid #ffeaa7;
-            padding: 15px;
-            border-radius: 4px;
-            margin-bottom: 20px;
-        }
-        
         .file-list {
             margin-top: 20px;
         }
@@ -186,6 +178,61 @@
             color: #0c5460;
             border: 1px solid #bee5eb;
         }
+        
+        .media-preview {
+            margin-top: 10px;
+        }
+        
+        .media-preview img, .media-preview video {
+            max-width: 200px;
+            max-height: 150px;
+            margin-right: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+        
+        .insert-media-btn {
+            background-color: #28a745;
+            padding: 5px 10px;
+            font-size: 14px;
+            margin: 5px 0;
+        }
+        
+        .insert-media-btn:hover {
+            background-color: #218838;
+        }
+        
+        #media-library {
+            max-height: 300px;
+            overflow-y: auto;
+            border: 1px solid #ddd;
+            padding: 10px;
+            margin-top: 10px;
+            border-radius: 4px;
+        }
+        
+        .media-item {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+            padding: 5px;
+            border: 1px solid #eee;
+            border-radius: 4px;
+        }
+        
+        .media-item img, .media-item video {
+            max-width: 100px;
+            max-height: 80px;
+            margin-right: 10px;
+        }
+        
+        .current-media-title {
+            margin-top: 20px;
+            padding-top: 10px;
+            border-top: 1px solid #eee;
+            color: #1e90ff;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -198,38 +245,39 @@
         
         <a href="index.html" class="back-link">← 返回首页</a>
         
-        <div class="security-code">
-            <p><strong>安全提醒：</strong>所有操作前需要输入安全码 <code>114514</code></p>
-        </div>
-        
         <div class="tabs">
             <button class="tab-button active" data-tab="news">新闻发布</button>
             <button class="tab-button" data-tab="manage">内容管理</button>
+            <button class="tab-button" data-tab="ads">广告管理</button>
         </div>
         
         <!-- 修改新闻发布表单 -->
         <div id="news-tab" class="tab-content active">
             <h2>发布新闻</h2>
             <div id="news-message" class="message" style="display:none;"></div>
-            <form id="news-form" enctype="multipart/form-data">
+            <form id="news-form">
                 <div class="form-group">
                     <label for="news-title">新闻标题</label>
                     <input type="text" id="news-title" required>
                 </div>
 
                 <div class="form-group">
-                    <label for="news-content">新闻内容</label>
+                    <label for="news-content">新闻内容 (支持HTML)</label>
                     <textarea id="news-content" required></textarea>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="news-files">上传图片/视频 (可选，支持多选)</label>
+                    <label for="news-files">上传媒体文件 (支持多选)</label>
                     <input type="file" id="news-files" accept="image/*,video/*" multiple>
+                    <div id="media-preview" class="media-preview"></div>
                 </div>
-
+                
                 <div class="form-group">
-                    <label for="news-security">安全码</label>
-                    <input type="password" id="news-security" required>
+                    <button type="button" id="show-media-library">查看当前媒体库</button>
+                    <div id="media-library" style="display: none;">
+                        <h4>当前新闻可用媒体文件</h4>
+                        <div id="media-library-list"></div>
+                    </div>
                 </div>
 
                 <button type="submit">发布新闻</button>
@@ -241,15 +289,36 @@
             <h2>内容管理</h2>
             <div id="manage-message" class="message" style="display:none;"></div>
             
-            <div class="form-group">
-                <label for="manage-security">安全码</label>
-                <input type="password" id="manage-security" required>
-            </div>
-            
             <button id="load-content">加载内容列表</button>
+            <button id="download-selected">下载选中项</button>
             
             <div class="file-list" id="file-list">
-                <p>请输入安全码并点击"加载内容列表"查看现有内容</p>
+                <p>点击"加载内容列表"查看现有内容</p>
+            </div>
+        </div>
+
+        <!-- 广告管理 -->
+        <div id="ads-tab" class="tab-content">
+            <h2>广告管理</h2>
+            <div id="ads-message" class="message" style="display:none;"></div>
+            
+            <form id="ad-form">
+                <div class="form-group">
+                    <label for="ad-text">广告文本</label>
+                    <input type="text" id="ad-text" required>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ad-link">广告链接</label>
+                    <input type="url" id="ad-link" placeholder="https://example.com" required>
+                </div>
+                
+                <button type="submit">添加广告</button>
+            </form>
+            
+            <div class="file-list" id="ads-list">
+                <h3>现有广告</h3>
+                <p>加载中...</p>
             </div>
         </div>
         
@@ -258,7 +327,10 @@
         </footer>
     </div>
 
-    <script>
+<script>
+        // 存储当前新闻的媒体文件
+        let currentMediaFiles = [];
+        
         // Tab切换功能
         document.querySelectorAll('.tab-button').forEach(button => {
             button.addEventListener('click', () => {
@@ -290,22 +362,191 @@
             }, 3000);
         }
         
+        // 预览上传的媒体文件
+        document.getElementById('news-files').addEventListener('change', function(e) {
+            const files = e.target.files;
+            const previewContainer = document.getElementById('media-preview');
+            
+            for (let i = 0; i < files.length; i++) {
+                const file = files[i];
+                const fileType = file.type.split('/')[0];
+                
+                // 为每个文件创建一个临时URL并添加到currentMediaFiles数组
+                const fileURL = URL.createObjectURL(file);
+                const fileObj = {
+                    name: file.name,
+                    url: fileURL,
+                    type: fileType
+                };
+                
+                currentMediaFiles.push(fileObj);
+                
+                if (fileType === 'image') {
+                    const img = document.createElement('img');
+                    img.src = fileURL;
+                    img.alt = file.name;
+                    previewContainer.appendChild(img);
+                } else if (fileType === 'video') {
+                    const video = document.createElement('video');
+                    video.src = fileURL;
+                    video.controls = true;
+                    previewContainer.appendChild(video);
+                }
+            }
+        });
+        
+        // 显示媒体库
+        document.getElementById('show-media-library').addEventListener('click', function() {
+            const mediaLibrary = document.getElementById('media-library');
+            mediaLibrary.style.display = mediaLibrary.style.display === 'none' ? 'block' : 'none';
+            
+            if (mediaLibrary.style.display === 'block') {
+                loadMediaLibrary();
+            }
+        });
+        
+        // 加载媒体库（仅显示当前新闻的媒体文件）
+        function loadMediaLibrary() {
+            const mediaList = document.getElementById('media-library-list');
+            mediaList.innerHTML = '';
+            
+            if (currentMediaFiles.length === 0) {
+                mediaList.innerHTML = '<p>暂无媒体文件，请先上传媒体文件</p>';
+                return;
+            }
+            
+            // 获取上传文件的真实名称
+            fetch('/api/temp-media-names')
+            .then(response => response.json())
+            .then(data => {
+                const tempMediaNames = data.names || [];
+                
+                currentMediaFiles.forEach((media, index) => {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
+                    
+                    // 获取临时文件名（如果存在）
+                    const tempFileName = index < tempMediaNames.length ? tempMediaNames[index] : media.name;
+                    
+                    if (media.type === 'image') {
+                        mediaItem.innerHTML = `
+                            <img src="${media.url}" alt="${media.name}">
+                            <div>
+                                <div>${media.name}</div>
+                                <button class="insert-media-btn" data-filename="${tempFileName}" data-type="image">插入图片</button>
+                            </div>
+                        `;
+                    } else if (media.type === 'video') {
+                        mediaItem.innerHTML = `
+                            <video src="${media.url}" controls></video>
+                            <div>
+                                <div>${media.name}</div>
+                                <button class="insert-media-btn" data-filename="${tempFileName}" data-type="video">插入视频</button>
+                            </div>
+                        `;
+                    } else {
+                        mediaItem.innerHTML = `
+                            <div>
+                                <div>${media.name}</div>
+                                <button class="insert-media-btn" data-filename="${tempFileName}" data-type="file">插入链接</button>
+                            </div>
+                        `;
+                    }
+                    
+                    mediaList.appendChild(mediaItem);
+                });
+                
+                // 添加插入按钮事件
+                document.querySelectorAll('.insert-media-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const filename = this.getAttribute('data-filename');
+                        const type = this.getAttribute('data-type');
+                        const contentArea = document.getElementById('news-content');
+                        
+                        if (type === 'image') {
+                            const imgTag = `<img src="/uploads/${filename}" alt="${filename}" style="max-width: 100%; height: auto;">`;
+                            contentArea.value += `\n${imgTag}\n`;
+                        } else if (type === 'video') {
+                            const videoTag = `<video src="/uploads/${filename}" controls style="max-width: 100%; height: auto;"></video>`;
+                            contentArea.value += `\n${videoTag}\n`;
+                        } else {
+                            const linkTag = `<a href="/uploads/${filename}" target="_blank">${filename}</a>`;
+                            contentArea.value += linkTag;
+                        }
+                    });
+                });
+            })
+            .catch(error => {
+                console.error('获取临时文件名失败:', error);
+                // 如果获取失败，使用原始文件名
+                currentMediaFiles.forEach((media, index) => {
+                    const mediaItem = document.createElement('div');
+                    mediaItem.className = 'media-item';
+                    
+                    if (media.type === 'image') {
+                        mediaItem.innerHTML = `
+                            <img src="${media.url}" alt="${media.name}">
+                            <div>
+                                <div>${media.name}</div>
+                                <button class="insert-media-btn" data-filename="${media.name}" data-type="image">插入图片</button>
+                            </div>
+                        `;
+                    } else if (media.type === 'video') {
+                        mediaItem.innerHTML = `
+                            <video src="${media.url}" controls></video>
+                            <div>
+                                <div>${media.name}</div>
+                                <button class="insert-media-btn" data-filename="${media.name}" data-type="video">插入视频</button>
+                            </div>
+                        `;
+                    } else {
+                        mediaItem.innerHTML = `
+                            <div>
+                                <div>${media.name}</div>
+                                <button class="insert-media-btn" data-filename="${media.name}" data-type="file">插入链接</button>
+                            </div>
+                        `;
+                    }
+                    
+                    mediaList.appendChild(mediaItem);
+                });
+                
+                // 添加插入按钮事件
+                document.querySelectorAll('.insert-media-btn').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const filename = this.getAttribute('data-filename');
+                        const type = this.getAttribute('data-type');
+                        const contentArea = document.getElementById('news-content');
+                        
+                        if (type === 'image') {
+                            const imgTag = `<img src="/uploads/${filename}" alt="${filename}" style="max-width: 100%; height: auto;">`;
+                            contentArea.value += `\n${imgTag}\n`;
+                        } else if (type === 'video') {
+                            const videoTag = `<video src="/uploads/${filename}" controls style="max-width: 100%; height: auto;"></video>`;
+                            contentArea.value += `\n${videoTag}\n`;
+                        } else {
+                            const linkTag = `<a href="/uploads/${filename}" target="_blank">${filename}</a>`;
+                            contentArea.value += linkTag;
+                        }
+                    });
+                });
+            });
+        }
+        
         // 新闻发布表单提交
-        // 修改新闻发布表单提交处理
         document.getElementById('news-form').addEventListener('submit', function(e) {
             e.preventDefault();
 
             const title = document.getElementById('news-title').value;
             const content = document.getElementById('news-content').value;
-            const files = document.getElementById('news-files').files;
-            const securityCode = document.getElementById('news-security').value;
 
             const formData = new FormData();
             formData.append('title', title);
             formData.append('content', content);
-            formData.append('security_code', securityCode);
 
-            // 添加文件到表单
+            // 添加当前新闻的文件到表单
+            const fileInput = document.getElementById('news-files');
+            const files = fileInput.files;
             for (let i = 0; i < files.length; i++) {
                 formData.append('files', files[i]);
             }
@@ -321,8 +562,10 @@
                     showMessage('news-message', data.error, 'error');
                 } else {
                     showMessage('news-message', `新闻已发布：${data.message}`, 'success');
-                    // 重置表单
+                    // 重置表单和当前媒体文件
                     document.getElementById('news-form').reset();
+                    document.getElementById('media-preview').innerHTML = '';
+                    currentMediaFiles = [];
                 }
             })
             .catch(error => {
@@ -330,19 +573,10 @@
             });
         });
         
-        
-        
         // 加载内容列表
         document.getElementById('load-content').addEventListener('click', function() {
-            const securityCode = document.getElementById('manage-security').value;
-            
-            if (!securityCode) {
-                showMessage('manage-message', '请输入安全码！', 'error');
-                return;
-            }
-            
             // 从后端获取文件列表
-            fetch(`/api/files?security_code=${securityCode}`)
+            fetch('/api/files')
             .then(response => response.json())
             .then(data => {
                 if (data.error) {
@@ -358,6 +592,7 @@
                         data.news.forEach(item => {
                             fileListHTML += `
                                 <div class="file-item">
+                                    <input type="checkbox" class="select-item" data-id="${item.id}" data-title="${item.title}">
                                     <span>${item.title} (${item.id}) - ${item.date}</span>
                                     <button class="delete-btn" data-file="${item.id}">删除</button>
                                 </div>
@@ -365,33 +600,7 @@
                         });
                     }
                     
-                    // 显示漫画
-                    if (data.comics.length > 0) {
-                        fileListHTML += '<h3>漫画</h3>';
-                        data.comics.forEach(item => {
-                            fileListHTML += `
-                                <div class="file-item">
-                                    <span>${item.title} (${item.id}) - ${item.date}</span>
-                                    <button class="delete-btn" data-file="${item.id}">删除</button>
-                                </div>
-                            `;
-                        });
-                    }
-                    
-                    // 显示视频
-                    if (data.videos.length > 0) {
-                        fileListHTML += '<h3>视频</h3>';
-                        data.videos.forEach(item => {
-                            fileListHTML += `
-                                <div class="file-item">
-                                    <span>${item.title} (${item.id}) - ${item.date}</span>
-                                    <button class="delete-btn" data-file="${item.id}">删除</button>
-                                </div>
-                            `;
-                        });
-                    }
-                    
-                    if (data.news.length === 0 && data.comics.length === 0 && data.videos.length === 0) {
+                    if (data.news.length === 0) {
                         fileListHTML = '<p>暂无内容</p>';
                     }
                     
@@ -404,13 +613,7 @@
                             if (confirm(`确定要删除文件 "${fileName}" 吗？`)) {
                                 // 发送删除请求到后端
                                 fetch(`/api/files/${fileName}`, {
-                                    method: 'DELETE',
-                                    headers: {
-                                        'Content-Type': 'application/json'
-                                    },
-                                    body: JSON.stringify({
-                                        security_code: securityCode
-                                    })
+                                    method: 'DELETE'
                                 })
                                 .then(response => response.json())
                                 .then(data => {
@@ -433,6 +636,47 @@
             .catch(error => {
                 showMessage('manage-message', '加载失败：' + error.message, 'error');
                 document.getElementById('file-list').innerHTML = '<p>加载失败</p>';
+            });
+        });
+
+        // 下载选中项
+        document.getElementById('download-selected').addEventListener('click', function() {
+            const selectedItems = document.querySelectorAll('.select-item:checked');
+            if (selectedItems.length === 0) {
+                showMessage('manage-message', '请至少选择一个项目进行下载', 'error');
+                return;
+            }
+            
+            const fileIds = Array.from(selectedItems).map(item => item.getAttribute('data-id'));
+            const fileTitles = Array.from(selectedItems).map(item => item.getAttribute('data-title'));
+            
+            // 调用后端API进行打包下载
+            fetch('/api/download', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({files: fileIds, titles: fileTitles})
+            })
+            .then(response => {
+                if (response.ok) {
+                    return response.blob();
+                }
+                throw new Error('下载失败');
+            })
+            .then(blob => {
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = '新闻打包下载.zip';
+                document.body.appendChild(a);
+                a.click();
+                a.remove();
+                window.URL.revokeObjectURL(url);
+                showMessage('manage-message', '下载成功', 'success');
+            })
+            .catch(error => {
+                showMessage('manage-message', '下载失败：' + error.message, 'error');
             });
         });
 
@@ -467,6 +711,98 @@
             console.error('检查登录状态失败：', error);
         });
 
+        // 广告管理功能
+        document.getElementById('ad-form').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const adText = document.getElementById('ad-text').value;
+            const adLink = document.getElementById('ad-link').value;
+            
+            fetch('/api/ads', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({text: adText, link: adLink})
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showMessage('ads-message', data.error, 'error');
+                } else {
+                    showMessage('ads-message', '广告添加成功', 'success');
+                    document.getElementById('ad-form').reset();
+                    loadAds(); // 重新加载广告列表
+                }
+            })
+            .catch(error => {
+                showMessage('ads-message', '添加失败：' + error.message, 'error');
+            });
+        });
+        
+        // 加载广告列表
+        function loadAds() {
+            fetch('/api/ads')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('ads-list').innerHTML = '<p>加载失败: ' + data.error + '</p>';
+                    return;
+                }
+                
+                if (data.ads.length === 0) {
+                    document.getElementById('ads-list').innerHTML = '<p>暂无广告</p>';
+                    return;
+                }
+                
+                let adsHTML = '<h3>现有广告</h3>';
+                data.ads.forEach((ad, index) => {
+                    adsHTML += `
+                        <div class="file-item">
+                            <span>${ad.text} - <a href="${ad.link}" target="_blank">${ad.link}</a></span>
+                            <button class="delete-btn delete-ad" data-index="${index}">删除</button>
+                        </div>
+                    `;
+                });
+                
+                document.getElementById('ads-list').innerHTML = adsHTML;
+                
+                // 为删除按钮添加事件监听器
+                document.querySelectorAll('.delete-ad').forEach(button => {
+                    button.addEventListener('click', function() {
+                        const index = this.getAttribute('data-index');
+                        deleteAd(index);
+                    });
+                });
+            })
+            .catch(error => {
+                document.getElementById('ads-list').innerHTML = '<p>加载失败: ' + error.message + '</p>';
+            });
+        }
+        
+        // 删除广告
+        function deleteAd(index) {
+            fetch('/api/ads/' + index, {
+                method: 'DELETE'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    showMessage('ads-message', data.error, 'error');
+                } else {
+                    showMessage('ads-message', '广告删除成功', 'success');
+                    loadAds(); // 重新加载广告列表
+                }
+            })
+            .catch(error => {
+                showMessage('ads-message', '删除失败：' + error.message, 'error');
+            });
+        }
+        
+        // 当切换到广告标签时加载广告
+        document.querySelector('[data-tab="ads"]').addEventListener('click', function() {
+            loadAds();
+        });
     </script>
 </body>
 </html>

@@ -16,7 +16,7 @@
 
 - **后端**：Python + Flask
 - **前端**：HTML5 + CSS3 + JavaScript (原生)
-- **数据存储**：JSON 文件存储（无需数据库）
+- **数据存储**：SQLite（支持从旧 JSON 数据迁移）
 - **会话管理**：Flask Session
 
 ## 快速开始
@@ -47,6 +47,9 @@ echo "THIS_IS_A_VERY_SECRET_KEY_FOR_ADMIN_ACCESS_2023" > admin.key
 4. 启动服务：
 ```bash
 python app.py
+
+# 如需迁移旧 JSON 数据
+python migrate_json_to_sqlite.py --clear
 ```
 
 5. 访问应用：
@@ -94,13 +97,13 @@ python app.py
 
 ```
 qybs/
-├── app.py              # 主应用文件
-├── index.html          # 前台首页
-├── admin.html          # 管理后台
-├── login.html          # 登录页面
-├── data.json           # 数据存储文件
-├── uploads/            # 上传文件目录
-├── admin.key           # 管理员门票文件（需手动创建）
+├── app.py                      # 应用入口
+├── config.py                   # 路径与配置
+├── db.py                       # SQLite 连接与建表
+├── routes/                     # 按功能拆分的路由
+├── web/                        # 所有 HTML 页面
+├── uploads/                    # 上传文件目录
+├── migrate_json_to_sqlite.py   # JSON -> SQLite 迁移脚本
 └── README.md
 ```
 

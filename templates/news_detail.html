@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ title }} - 七一报社</title>
+    <link rel="stylesheet" href="/news_styles.css">
+</head>
+<body>
+    <header><h1>七一报社</h1></header>
+    <div class="container">
+        <a href="/" class="back-link">← 返回首页</a>
+        <div class="news-content">
+            <h1 class="news-title">{{ title }}</h1>
+            <div class="news-meta">{{ publish_time }}</div>
+            <div class="news-body">{{ content|safe }}</div>
+        </div>
+        <div class="comments-section">
+            <h2 class="comments-title">评论</h2>
+            <div class="comment-form">
+                <textarea id="comment-content" placeholder="输入您的评论..."></textarea>
+                <button id="submit-comment">发表评论</button>
+            </div>
+            <ul class="comments-list" id="comments-list"></ul>
+        </div>
+    </div>
+    <script src="/static/js/comments.js"></script>
+    <script>
+        // 初始化评论系统
+        window.initComments('{{ filename }}');
+    </script>
+</body>
+</html>

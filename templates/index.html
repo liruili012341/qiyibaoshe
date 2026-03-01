@@ -1,0 +1,1114 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>七一报社</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f8ff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #1e90ff;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #4682b4;
+        }
+        
+        .user-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        #user-info {
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+        
+        #logout-btn:hover {
+            background-color: #1e90ff;
+        }
+        
+        #login-btn:hover, #register-btn:hover {
+            background-color: #1e90ff;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .date {
+            font-size: 14px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            background-color: #4169e1;
+        }
+        
+        nav ul li {
+            position: relative;
+        }
+        
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #1e90ff;
+        }
+        
+        /* 搜索框 */
+        .search-container {
+            padding: 20px 0;
+            text-align: center;
+        }
+        
+        .search-box {
+            width: 100%;
+            max-width: 500px;
+            padding: 10px 15px;
+            font-size: 16px;
+            border: 2px solid #1e90ff;
+            border-radius: 25px;
+            outline: none;
+        }
+        
+        /* 主要内容区域 */
+        .main-content {
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .section-title {
+            border-left: 4px solid #1e90ff;
+            padding-left: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #1e90ff;
+        }
+        
+        /* 新闻列表 */
+        .news-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .news-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .news-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+        
+        .news-title a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .news-title a:hover {
+            color: #1e90ff;
+        }
+        
+        .news-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .news-excerpt {
+            color: #666;
+            margin-bottom: 10px;
+        }
+        
+        .news-content-full {
+            margin-top: 10px;
+            padding: 10px;
+            background-color: #f9f9f9;
+            border-left: 3px solid #1e90ff;
+            display: none;
+        }
+        
+        .toggle-content {
+            color: #1e90ff;
+            cursor: pointer;
+            font-weight: bold;
+            margin-top: 10px;
+            display: inline-block;
+        }
+        
+        .toggle-content:hover {
+            text-decoration: underline;
+        }
+        
+        /* 侧边栏 */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .sidebar-box {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            border-radius: 5px;
+        }
+        
+        .hot-item {
+            display: flex;
+            margin-bottom: 15px;
+            padding-bottom: 15px;
+            border-bottom: 1px dashed #eee;
+        }
+        
+        .hot-item:last-child {
+            margin-bottom: 0;
+            padding-bottom: 0;
+            border-bottom: none;
+        }
+        
+        .hot-number {
+            font-size: 20px;
+            font-weight: bold;
+            color: #1e90ff;
+            margin-right: 10px;
+            line-height: 1;
+        }
+        
+        .hot-content a {
+            color: #333;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .hot-content a:hover {
+            color: #1e90ff;
+        }
+        
+        .hot-content .meta {
+            font-size: 12px;
+            color: #999;
+            margin: 5px 0 0;
+        }
+        
+        /* 页脚 */
+        footer {
+            background-color: #1e90ff;
+            color: white;
+            padding: 30px 0;
+            margin-top: 40px;
+        }
+        
+        .footer-content {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        
+        .footer-column h3 {
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+        
+        .footer-column ul {
+            list-style: none;
+        }
+        
+        .footer-column ul li {
+            margin-bottom: 8px;
+        }
+        
+        .footer-column ul li a {
+            color: #e6f2ff;
+            text-decoration: none;
+            transition: color 0.3s;
+        }
+        
+        .footer-column ul li a:hover {
+            color: #fff;
+        }
+        
+        .copyright {
+            text-align: center;
+            padding-top: 20px;
+            margin-top: 20px;
+            border-top: 1px solid #4682b4;
+            color: #e6f2ff;
+            font-size: 14px;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .main-content {
+                grid-template-columns: 1fr;
+            }
+            
+            .footer-content {
+                grid-template-columns: repeat(2, 1fr);
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            nav ul li a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            .footer-content {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        /* 管理链接 */
+        .admin-link {
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .admin-link a {
+            display: inline-block;
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .admin-link a:hover {
+            background-color: #4169e1;
+        }
+        
+        /* 查看所有新闻链接 */
+        .view-all-news {
+            text-align: center;
+            margin-top: 20px;
+        }
+        
+        .view-all-link {
+            display: inline-block;
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        
+        .view-all-link:hover {
+            background-color: #4169e1;
+        }
+
+        /* 加载提示 */
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        /* 搜索结果 */
+        .search-results-info {
+            background-color: #e6f2ff;
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .news-actions {
+            margin-top: 10px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .like-btn {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            padding: 5px 10px;
+            background-color: #f0f8ff;
+            border: 1px solid #1e90ff;
+            border-radius: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .like-btn:hover {
+            background-color: #e6f2ff;
+        }
+        
+        .like-btn.liked {
+            background-color: #ff6b6b;
+            color: white;
+            border-color: #ff6b6b;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 8px;
+            border: 1px solid #ddd;
+            border-radius: 3px;
+        }
+        
+        .form-btn {
+            width: 100%;
+            padding: 10px;
+            background-color: #1e90ff;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .form-btn:hover {
+            background-color: #4169e1;
+        }
+        
+        .form-message {
+            margin-top: 10px;
+            text-align: center;
+            color: red;
+        }
+        
+        .hidden {
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">七一报社</div>
+                <div class="user-controls">
+                    <div id="user-info" style="display: none;">
+                        <span id="username"></span>
+                        <button id="logout-btn" style="margin-left: 10px; padding: 5px 10px; background-color: #4682b4; color: white; border: none; border-radius: 3px; cursor: pointer;">登出</button>
+                    </div>
+                    <div id="login-register" style="display: flex; gap: 10px;">
+                        <button id="login-btn" style="padding: 5px 10px; background-color: #4682b4; color: white; border: none; border-radius: 3px; cursor: pointer;">登录</button>
+                        <button id="register-btn" style="padding: 5px 10px; background-color: #4682b4; color: white; border: none; border-radius: 3px; cursor: pointer;">注册</button>
+                    </div>
+                </div>
+                <div class="date" id="current-date">2023年10月15日 星期日</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="#news">新闻</a></li>
+                    <li><a href="/discuss">论坛</a></li>
+                    <li><a href="/history">历史新闻</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 搜索框 -->
+    <div class="container">
+        <div class="search-container">
+            <input type="text" class="search-box" id="search-input" placeholder="搜索新闻标题或内容...">
+        </div>
+    </div>
+
+    <!-- 主要内容 -->
+    <div class="container">
+        <div class="main-content">
+            <div class="content">
+                <!-- 新闻区域 -->
+                <div class="section" id="news">
+                    <h2 class="section-title">新闻</h2>
+                    <div id="search-results-info" class="search-results-info"></div>
+                    <div class="news-list" id="news-list">
+                        <div class="loading">加载中...</div>
+                    </div>
+                    <div class="view-all-news" id="view-all-news">
+                        <a href="/history" class="view-all-link">查看所有新闻 →</a>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 侧边栏 -->
+            <div class="sidebar">
+                <div class="sidebar-box">
+                    <h2 class="section-title">最新内容</h2>
+                    <div id="latest-content">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+                
+                <!-- 广告区域 -->
+                <div class="sidebar-box">
+                    <h2 class="section-title">友情链接</h2>
+                    <div id="ads-content">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 页脚 -->
+    <footer>
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-column">
+                    <h3>内容分类</h3>
+                    <ul>
+                        <li><a href="./admin">写新闻</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>关于我们</h3>
+                    <ul>
+                        <li><a href="#">报社简介</a></li>
+                        <li><a href="#">联系方式</a></li>
+                        <li><a href="#">版权声明</a></li>
+                    </ul>
+                </div>
+                <div class="footer-column">
+                    <h3>联系方式</h3>
+                    <ul>
+                        <li>站主邮箱：liruili012341@gmail.com</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="copyright">
+                <p>© 2023 七一报社 版权所有</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- 登录模态框 -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">登录</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">用户名</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div class="form-group hidden" id="captcha-group">
+                    <label for="login-captcha">验证码</label>
+                    <input type="text" id="login-captcha" placeholder="请输入4位数字验证码">
+                </div>
+                <button type="submit" class="form-btn">登录</button>
+                <div class="form-message" id="login-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">注册</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-username">用户名</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="form-btn">注册</button>
+                <div class="form-message" id="register-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 动态显示当前日期
+        function updateDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const dayOfWeek = days[now.getDay()];
+            
+            document.getElementById('current-date').textContent = 
+                `${year}年${month}月${day}日 ${dayOfWeek}`;
+        }
+        
+        // 从服务器加载内容
+        function loadContent() {
+            fetch('/api/files?security_code=114514')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.querySelectorAll('.loading').forEach(el => {
+                        el.textContent = '加载失败: ' + data.error;
+                    });
+                    return;
+                }
+                
+                // 加载新闻
+                loadNews(data.news);
+                
+                // 加载最新内容
+                loadLatestContent(data);
+            })
+            .catch(error => {
+                document.querySelectorAll('.loading').forEach(el => {
+                    el.textContent = '加载失败: ' + error.message;
+                });
+            });
+        }
+        
+        // 搜索新闻
+        function searchNews(term) {
+            fetch('/api/files?security_code=114514')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('news-list').innerHTML = '<p>搜索失败: ' + data.error + '</p>';
+                    return;
+                }
+                
+                // 过滤新闻
+                const filteredNews = data.news.filter(news => {
+                    // 检查标题和内容是否包含搜索词
+                    return news.title.toLowerCase().includes(term.toLowerCase()) || 
+                           (news.content && news.content.toLowerCase().includes(term.toLowerCase()));
+                });
+                
+                // 显示搜索结果信息
+                const searchInfo = document.getElementById('search-results-info');
+                searchInfo.textContent = `找到 ${filteredNews.length} 条相关新闻`;
+                searchInfo.style.display = 'block';
+                
+                // 显示搜索结果
+                loadNews(filteredNews);
+            })
+            .catch(error => {
+                document.getElementById('news-list').innerHTML = '<p>搜索失败: ' + error.message + '</p>';
+            });
+        }
+        
+        // 加载新闻
+        function loadNews(newsList) {
+            const newsContainer = document.getElementById('news-list');
+            const viewAllNews = document.getElementById('view-all-news');
+
+            if (newsList.length === 0) {
+                newsContainer.innerHTML = '<p>暂无新闻</p>';
+                return;
+            }
+
+            // 只显示最近10条新闻
+            const displayNews = newsList.slice(0, 10);
+            
+            let newsHTML = '';
+            displayNews.forEach(news => {
+                // 截取内容前100个字符作为摘要
+                const excerpt = news.content ? news.content.substring(0, 100) + (news.content.length > 100 ? '...' : '') : '';
+                
+                newsHTML += `
+                    <div class="news-item">
+                        <h3 class="news-title"><a href="/news/${news.id}">${news.title}</a></h3>
+                        <div class="news-meta">${news.date}</div>
+                        <div class="news-excerpt">${excerpt}</div>
+                        ${news.content && news.content.length > 100 ? 
+                            `<div class="news-content-full" id="content-${news.id}">${news.content}</div>
+                             <div class="toggle-content" onclick="toggleContent('${news.id}')">展开全文 ▼</div>` : ''}
+                        <div class="news-actions">
+                            <button class="like-btn" onclick="toggleLike('${news.id}')" data-news-id="${news.id}">
+                                <span class="like-icon">👍</span>
+                                <span class="like-count" id="like-count-${news.id}">0</span>
+                            </button>
+                        </div>
+                    </div>
+                `;
+            });
+
+            newsContainer.innerHTML = newsHTML;
+            
+            // 加载点赞数
+            loadLikeCounts();
+            
+            // 如果总新闻数超过10条，显示"查看所有新闻"按钮
+            if (newsList.length > 10) {
+                viewAllNews.style.display = 'block';
+            } else {
+                viewAllNews.style.display = 'none';
+            }
+        }
+        
+        // 切换内容显示/隐藏
+        function toggleContent(newsId) {
+            const contentElement = document.getElementById(`content-${newsId}`);
+            const toggleElement = contentElement.nextElementSibling;
+            
+            if (contentElement.style.display === 'none' || contentElement.style.display === '') {
+                contentElement.style.display = 'block';
+                toggleElement.textContent = '收起全文 ▲';
+            } else {
+                contentElement.style.display = 'none';
+                toggleElement.textContent = '展开全文 ▼';
+            }
+        }
+
+        // 加载最新内容
+        function loadLatestContent(data) {
+            const latestContainer = document.getElementById('latest-content');
+            
+            // 只处理新闻
+            const allContent = [
+                ...data.news.map(item => ({...item, type: '新闻'}))
+            ];
+            
+            // 按时间倒序排序
+            allContent.sort((a, b) => b.timestamp.localeCompare(a.timestamp));
+            
+            if (allContent.length === 0) {
+                latestContainer.innerHTML = '<p>暂无内容</p>';
+                return;
+            }
+            
+            let latestHTML = '';
+            allContent.slice(0, 5).forEach((item, index) => {
+                latestHTML += `
+                    <div class="hot-item">
+                        <div class="hot-number">${index + 1}</div>
+                        <div class="hot-content">
+                            <div><a href="/news/${item.id}">${item.title}</a></div>
+                            <div class="meta">${item.type} · ${item.date}</div>
+                        </div>
+                    </div>
+                `;
+            });
+            
+            latestContainer.innerHTML = latestHTML;
+        }
+        
+        // 加载广告
+        function loadAds() {
+            fetch('/api/ads')
+            .then(response => response.json())
+            .then(data => {
+                const adsContainer = document.getElementById('ads-content');
+                
+                if (data.error) {
+                    adsContainer.innerHTML = '<p>加载失败</p>';
+                    return;
+                }
+                
+                if (data.ads.length === 0) {
+                    adsContainer.innerHTML = '<p>暂无广告</p>';
+                    return;
+                }
+                
+                let adsHTML = '';
+                data.ads.forEach(ad => {
+                    adsHTML += `
+                        <div class="hot-item">
+                            <div class="hot-content">
+                                <div><a href="${ad.link}" target="_blank">${ad.text}</a></div>
+                            </div>
+                        </div>
+                    `;
+                });
+                
+                adsContainer.innerHTML = adsHTML;
+            })
+            .catch(error => {
+                document.getElementById('ads-content').innerHTML = '<p>加载失败</p>';
+            });
+        }
+        
+        // 检查登录状态
+        function checkLoginStatus() {
+            fetch('/api/check-login')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Not logged in');
+                })
+                .then(data => {
+                    if (data.logged_in) {
+                        document.getElementById('login-register').style.display = 'none';
+                        document.getElementById('user-info').style.display = 'flex';
+                        document.getElementById('username').textContent = data.username;
+                    } else {
+                        document.getElementById('login-register').style.display = 'flex';
+                        document.getElementById('user-info').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('login-register').style.display = 'flex';
+                    document.getElementById('user-info').style.display = 'none';
+                });
+        }
+        
+        // 登录
+        function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const captcha = document.getElementById('login-captcha').value;
+            const messageElement = document.getElementById('login-message');
+            const captchaGroup = document.getElementById('captcha-group');
+            
+            const loginData = { username, password };
+            if (!captchaGroup.classList.contains('hidden')) {
+                loginData.captcha = captcha;
+            }
+            
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    messageElement.textContent = data.error;
+                    if (data.require_captcha) {
+                        captchaGroup.classList.remove('hidden');
+                    }
+                } else {
+                    messageElement.textContent = '';
+                    document.getElementById('login-modal').style.display = 'none';
+                    captchaGroup.classList.add('hidden');
+                    checkLoginStatus();
+                }
+            })
+            .catch(error => {
+                messageElement.textContent = '登录失败: ' + error.message;
+            });
+        }
+        
+        // 注册
+        function register() {
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const messageElement = document.getElementById('register-message');
+            
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    messageElement.textContent = data.error;
+                } else {
+                    messageElement.textContent = '';
+                    document.getElementById('register-modal').style.display = 'none';
+                    checkLoginStatus();
+                }
+            })
+            .catch(error => {
+                messageElement.textContent = '注册失败: ' + error.message;
+            });
+        }
+        
+        // 登出
+        function logout() {
+            fetch('/api/logout', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                checkLoginStatus();
+            })
+            .catch(error => {
+                console.error('登出失败:', error);
+            });
+        }
+        
+        // 切换点赞状态
+        function toggleLike(newsId) {
+            // 检查用户是否登录
+            fetch('/api/check-login')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Not logged in');
+                })
+                .then(data => {
+                    if (data.logged_in) {
+                        // 检查当前是否已点赞
+                        const likeBtn = document.querySelector(`.like-btn[data-news-id="${newsId}"]`);
+                        const isLiked = likeBtn.classList.contains('liked');
+                        
+                        if (isLiked) {
+                            // 取消点赞
+                            fetch('/api/unlike', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ news_id: newsId })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    alert(data.error);
+                                } else {
+                                    likeBtn.classList.remove('liked');
+                                    document.getElementById(`like-count-${newsId}`).textContent = data.like_count;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('取消点赞失败:', error);
+                            });
+                        } else {
+                            // 点赞
+                            fetch('/api/like', {
+                                method: 'POST',
+                                headers: {
+                                    'Content-Type': 'application/json'
+                                },
+                                body: JSON.stringify({ news_id: newsId })
+                            })
+                            .then(response => response.json())
+                            .then(data => {
+                                if (data.error) {
+                                    alert(data.error);
+                                } else {
+                                    likeBtn.classList.add('liked');
+                                    document.getElementById(`like-count-${newsId}`).textContent = data.like_count;
+                                }
+                            })
+                            .catch(error => {
+                                console.error('点赞失败:', error);
+                            });
+                        }
+                    } else {
+                        // 未登录，显示登录模态框
+                        document.getElementById('login-modal').style.display = 'block';
+                    }
+                })
+                .catch(error => {
+                    // 未登录，显示登录模态框
+                    document.getElementById('login-modal').style.display = 'block';
+                });
+        }
+        
+        // 加载点赞数
+        function loadLikeCounts() {
+            // 获取所有新闻项
+            const newsItems = document.querySelectorAll('.news-item');
+            newsItems.forEach(item => {
+                const newsId = item.querySelector('.like-btn').dataset.newsId;
+                if (newsId) {
+                    fetch(`/api/like-count/${newsId}`)
+                        .then(response => response.json())
+                        .then(data => {
+                            if (!data.error) {
+                                const likeBtn = item.querySelector('.like-btn');
+                                const likeCount = item.querySelector('.like-count');
+                                likeCount.textContent = data.like_count;
+                                if (data.is_liked) {
+                                    likeBtn.classList.add('liked');
+                                }
+                            }
+                        })
+                        .catch(error => {
+                            console.error('获取点赞数失败:', error);
+                        });
+                }
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadContent();
+            loadAds(); // 加载广告
+            checkLoginStatus(); // 检查登录状态
+            
+            // 添加搜索功能
+            document.getElementById('search-input').addEventListener('input', function() {
+                const searchTerm = this.value.trim();
+                if (searchTerm.length > 0) {
+                    searchNews(searchTerm);
+                } else {
+                    // 如果搜索框为空，重新加载所有内容
+                    loadContent();
+                }
+            });
+            
+            // 登录按钮点击事件
+            document.getElementById('login-btn').addEventListener('click', function() {
+                document.getElementById('login-modal').style.display = 'block';
+            });
+            
+            // 注册按钮点击事件
+            document.getElementById('register-btn').addEventListener('click', function() {
+                document.getElementById('register-modal').style.display = 'block';
+            });
+            
+            // 登出按钮点击事件
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                logout();
+            });
+            
+            // 关闭模态框
+            document.querySelectorAll('.close').forEach(function(closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+            
+            // 登录表单提交
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                login();
+            });
+            
+            // 注册表单提交
+            document.getElementById('register-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                register();
+            });
+        });
+    </script>
+</body>
+</html>

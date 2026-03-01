@@ -1,0 +1,771 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>论坛 - 七一报社</title>
+    <link rel="stylesheet" href="/static/styles.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', Arial, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f0f8ff;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        
+        /* 头部样式 */
+        header {
+            background-color: #1e90ff;
+            color: white;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .header-top {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px 0;
+            border-bottom: 1px solid #4682b4;
+        }
+        
+        .user-controls {
+            display: flex;
+            align-items: center;
+        }
+        
+        #user-info {
+            display: flex;
+            align-items: center;
+            color: white;
+        }
+        
+        #logout-btn {
+            margin-left: 10px;
+            padding: 5px 10px;
+            background-color: #4682b4;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        #logout-btn:hover {
+            background-color: #1e90ff;
+        }
+        
+        #login-register {
+            display: flex;
+            gap: 10px;
+        }
+        
+        #login-btn, #register-btn {
+            padding: 5px 10px;
+            background-color: #4682b4;
+            color: white;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+        }
+        
+        #login-btn:hover, #register-btn:hover {
+            background-color: #1e90ff;
+        }
+        
+        /* 模态框样式 */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0,0,0,0.4);
+        }
+        
+        .modal-content {
+            background-color: #fefefe;
+            margin: 15% auto;
+            padding: 20px;
+            border: 1px solid #888;
+            width: 300px;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        
+        .modal-title {
+            font-size: 18px;
+            font-weight: bold;
+        }
+        
+        .close {
+            color: #aaa;
+            float: right;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+        
+        .close:hover,
+        .close:focus {
+            color: black;
+            text-decoration: none;
+            cursor: pointer;
+        }
+        
+        .form-message {
+            margin-top: 10px;
+            text-align: center;
+            color: red;
+        }
+        
+        .logo {
+            font-size: 28px;
+            font-weight: bold;
+        }
+        
+        .date {
+            font-size: 14px;
+        }
+        
+        nav ul {
+            display: flex;
+            list-style: none;
+            background-color: #4169e1;
+        }
+        
+        nav ul li {
+            position: relative;
+        }
+        
+        nav ul li a {
+            display: block;
+            color: white;
+            text-decoration: none;
+            padding: 15px 20px;
+            transition: background-color 0.3s;
+        }
+        
+        nav ul li a:hover {
+            background-color: #1e90ff;
+        }
+        
+        .main-content {
+            margin: 20px 0;
+        }
+        
+        .section {
+            background-color: #fff;
+            padding: 20px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+            margin-bottom: 20px;
+            border-radius: 5px;
+        }
+        
+        .section-title {
+            border-left: 4px solid #1e90ff;
+            padding-left: 10px;
+            margin-bottom: 20px;
+            font-size: 22px;
+            color: #1e90ff;
+        }
+        
+        /* 发帖表单 */
+        .post-form {
+            margin-bottom: 30px;
+        }
+        
+        .form-group {
+            margin-bottom: 15px;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        
+        .form-group input, 
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-family: inherit;
+        }
+        
+        .form-group textarea {
+            min-height: 120px;
+            resize: vertical;
+        }
+        
+        .btn {
+            background-color: #1e90ff;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+        
+        .btn:hover {
+            background-color: #4169e1;
+        }
+        
+        /* 帖子列表 */
+        .post-item {
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+            margin-bottom: 20px;
+        }
+        
+        .post-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+        }
+        
+        .post-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+            color: #1e90ff;
+        }
+        
+        .post-meta {
+            color: #666;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+        
+        .post-content {
+            margin-bottom: 10px;
+        }
+        
+        .post-author {
+            font-weight: bold;
+        }
+        
+        /* 回复区域 */
+        .replies-section {
+            margin-top: 20px;
+            padding-left: 20px;
+            border-left: 2px solid #1e90ff;
+        }
+        
+        .reply-form {
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #f9f9f9;
+            border-radius: 4px;
+        }
+        
+        .reply-item {
+            padding: 10px;
+            margin-bottom: 10px;
+            background-color: #f5f5f5;
+            border-radius: 4px;
+        }
+        
+        .reply-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            color: #666;
+        }
+        
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #1e90ff;
+            text-decoration: none;
+        }
+        
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .header-top {
+                flex-direction: column;
+                text-align: center;
+            }
+            
+            nav ul {
+                flex-wrap: wrap;
+            }
+            
+            nav ul li a {
+                padding: 10px 15px;
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- 页面头部 -->
+    <header>
+        <div class="container">
+            <div class="header-top">
+                <div class="logo">七一报社</div>
+                <div class="user-controls">
+                    <div id="user-info" class="user-info"></div>
+                        <span id="username"></span>
+                        <button id="logout-btn">登出</button>
+                    </div>
+                    <div id="login-register" class="login-register"></div>
+                        <button id="login-btn">登录</button>
+                        <button id="register-btn">注册</button>
+                    </div>
+                </div>
+                <div class="date" id="current-date">2023年10月15日 星期日</div>
+            </div>
+            <nav>
+                <ul>
+                    <li><a href="/">首页</a></li>
+                    <li><a href="#discuss">论坛</a></li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <!-- 主要内容 -->
+    <div class="container">
+        <div class="main-content">
+            <div class="section" id="discuss">
+                <a href="/" class="back-link">← 返回首页</a>
+                <h2 class="section-title">论坛讨论区</h2>
+                
+                <!-- 发帖表单 -->
+                <div class="post-form">
+                    <h3>发表新帖</h3>
+                    <div id="login-prompt">
+                        请先<a href="#" id="login-link">登录</a>后发表帖子
+                    </div>
+                    <div id="post-form-content" class="post-form-content"></div>
+                        <div class="form-group">
+                            <label for="title">标题：</label>
+                            <input type="text" id="title" placeholder="请输入帖子标题">
+                        </div>
+                        <div class="form-group">
+                            <label for="content">内容：</label>
+                            <textarea id="content" placeholder="请输入帖子内容"></textarea>
+                        </div>
+                        <button class="btn" id="submit-post">发表帖子</button>
+                    </div>
+                </div>
+                
+                <!-- 帖子列表 -->
+                <div class="posts-list">
+                    <h3>最新帖子</h3>
+                    <div id="posts-container">
+                        <div class="loading">加载中...</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // 动态显示当前日期
+        function updateDate() {
+            const now = new Date();
+            const year = now.getFullYear();
+            const month = now.getMonth() + 1;
+            const day = now.getDate();
+            const days = ['星期日', '星期一', '星期二', '星期三', '星期四', '星期五', '星期六'];
+            const dayOfWeek = days[now.getDay()];
+            
+            document.getElementById('current-date').textContent = 
+                `${year}年${month}月${day}日 ${dayOfWeek}`;
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadPosts();
+            
+            // 绑定发表帖子按钮事件
+            document.getElementById('submit-post').addEventListener('click', submitPost);
+        });
+        
+        // 提交新帖子
+        function submitPost() {
+            const author = document.getElementById('author').value.trim();
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+            
+            if (!author || !title || !content) {
+                alert('请填写完整的帖子信息');
+                return;
+            }
+            
+            const postData = {
+                author: author,
+                title: title,
+                content: content,
+                date: new Date().toLocaleString('zh-CN', {
+                    year: 'numeric',
+                    month: '2-digit',
+                    day: '2-digit',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                })
+            };
+            
+            fetch('/api/discuss', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('发表失败: ' + data.error);
+                } else {
+                    alert('发表成功');
+                    // 清空表单
+                    document.getElementById('author').value = '';
+                    document.getElementById('title').value = '';
+                    document.getElementById('content').value = '';
+                    // 重新加载帖子列表
+                    loadPosts();
+                }
+            })
+            .catch(error => {
+                alert('发表失败: ' + error.message);
+            });
+        }
+        
+        // 加载帖子列表
+        function loadPosts() {
+            fetch('/api/discuss')
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    document.getElementById('posts-container').innerHTML = '<p>加载失败: ' + data.error + '</p>';
+                    return;
+                }
+                
+                renderPosts(data.posts);
+            })
+            .catch(error => {
+                document.getElementById('posts-container').innerHTML = '<p>加载失败: ' + error.message + '</p>';
+            });
+        }
+        
+        // 渲染帖子列表
+        function renderPosts(posts) {
+            const container = document.getElementById('posts-container');
+            
+            if (posts.length === 0) {
+                container.innerHTML = '<p>暂无论坛帖子</p>';
+                return;
+            }
+            
+            let html = '';
+            posts.forEach(post => {
+                html += `
+                    <div class="post-item">
+                        <h3 class="post-title">${post.title}</h3>
+                        <div class="post-meta">
+                            <span class="post-author">${post.author}</span> 发表于 ${post.date}
+                        </div>
+                        <div class="post-content">${post.content}</div>
+                    </div>
+                `;
+            });
+            
+            container.innerHTML = html;
+        }
+    </script>
+
+    <!-- 登录模态框 -->
+    <div id="login-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">登录</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="login-username">用户名</label>
+                    <input type="text" id="login-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="login-password">密码</label>
+                    <input type="password" id="login-password" required>
+                </div>
+                <div class="form-group" id="captcha-group"></div>
+                    <label for="login-captcha">验证码</label>
+                    <input type="text" id="login-captcha" placeholder="请输入4位数字验证码">
+                </div>
+                <button type="submit" class="btn">登录</button>
+                <div class="form-message" id="login-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 注册模态框 -->
+    <div id="register-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">注册</h2>
+                <span class="close">&times;</span>
+            </div>
+            <form id="register-form">
+                <div class="form-group">
+                    <label for="register-username">用户名</label>
+                    <input type="text" id="register-username" required>
+                </div>
+                <div class="form-group">
+                    <label for="register-password">密码</label>
+                    <input type="password" id="register-password" required>
+                </div>
+                <button type="submit" class="btn">注册</button>
+                <div class="form-message" id="register-message"></div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        // 检查登录状态
+        function checkLoginStatus() {
+            fetch('/api/check-login')
+                .then(response => {
+                    if (response.ok) {
+                        return response.json();
+                    }
+                    throw new Error('Not logged in');
+                })
+                .then(data => {
+                    if (data.logged_in) {
+                        document.getElementById('login-register').style.display = 'none';
+                        document.getElementById('user-info').style.display = 'flex';
+                        document.getElementById('username').textContent = data.username;
+                        document.getElementById('login-prompt').style.display = 'none';
+                        document.getElementById('post-form-content').style.display = 'block';
+                    } else {
+                        document.getElementById('login-register').style.display = 'flex';
+                        document.getElementById('user-info').style.display = 'none';
+                        document.getElementById('login-prompt').style.display = 'block';
+                        document.getElementById('post-form-content').style.display = 'none';
+                    }
+                })
+                .catch(error => {
+                    document.getElementById('login-register').style.display = 'flex';
+                    document.getElementById('user-info').style.display = 'none';
+                    document.getElementById('login-prompt').style.display = 'block';
+                    document.getElementById('post-form-content').style.display = 'none';
+                });
+        }
+        
+        // 登录
+        function login() {
+            const username = document.getElementById('login-username').value;
+            const password = document.getElementById('login-password').value;
+            const captcha = document.getElementById('login-captcha').value;
+            const messageElement = document.getElementById('login-message');
+            
+            const loginData = { username, password };
+            if (document.getElementById('captcha-group').style.display !== 'none') {
+                loginData.captcha = captcha;
+            }
+            
+            fetch('/api/login', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(loginData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    messageElement.textContent = data.error;
+                    if (data.require_captcha) {
+                        document.getElementById('captcha-group').style.display = 'block';
+                    }
+                } else {
+                    messageElement.textContent = '';
+                    document.getElementById('login-modal').style.display = 'none';
+                    document.getElementById('captcha-group').style.display = 'none';
+                    checkLoginStatus();
+                }
+            })
+            .catch(error => {
+                messageElement.textContent = '登录失败: ' + error.message;
+            });
+        }
+        
+        // 注册
+        function register() {
+            const username = document.getElementById('register-username').value;
+            const password = document.getElementById('register-password').value;
+            const messageElement = document.getElementById('register-message');
+            
+            fetch('/api/register', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ username, password })
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    messageElement.textContent = data.error;
+                } else {
+                    messageElement.textContent = '';
+                    document.getElementById('register-modal').style.display = 'none';
+                    checkLoginStatus();
+                }
+            })
+            .catch(error => {
+                messageElement.textContent = '注册失败: ' + error.message;
+            });
+        }
+        
+        // 登出
+        function logout() {
+            fetch('/api/logout', {
+                method: 'POST'
+            })
+            .then(response => response.json())
+            .then(data => {
+                checkLoginStatus();
+            })
+            .catch(error => {
+                console.error('登出失败:', error);
+            });
+        }
+        
+        // 提交新帖子
+        function submitPost() {
+            const title = document.getElementById('title').value.trim();
+            const content = document.getElementById('content').value.trim();
+            
+            if (!title || !content) {
+                alert('请填写完整的帖子信息');
+                return;
+            }
+            
+            const postData = {
+                title: title,
+                content: content
+            };
+            
+            fetch('/api/discuss', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(postData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert('发表失败: ' + data.error);
+                } else {
+                    alert('发表成功');
+                    // 清空表单
+                    document.getElementById('title').value = '';
+                    document.getElementById('content').value = '';
+                    // 重新加载帖子列表
+                    loadPosts();
+                }
+            })
+            .catch(error => {
+                alert('发表失败: ' + error.message);
+            });
+        }
+        
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            updateDate();
+            loadPosts();
+            checkLoginStatus();
+            
+            // 登录按钮点击事件
+            document.getElementById('login-btn').addEventListener('click', function() {
+                document.getElementById('login-modal').style.display = 'block';
+            });
+            
+            // 注册按钮点击事件
+            document.getElementById('register-btn').addEventListener('click', function() {
+                document.getElementById('register-modal').style.display = 'block';
+            });
+            
+            // 登出按钮点击事件
+            document.getElementById('logout-btn').addEventListener('click', function() {
+                logout();
+            });
+            
+            // 登录链接点击事件
+            document.getElementById('login-link').addEventListener('click', function(e) {
+                e.preventDefault();
+                document.getElementById('login-modal').style.display = 'block';
+            });
+            
+            // 关闭模态框
+            document.querySelectorAll('.close').forEach(function(closeBtn) {
+                closeBtn.addEventListener('click', function() {
+                    this.closest('.modal').style.display = 'none';
+                });
+            });
+            
+            // 点击模态框外部关闭
+            window.addEventListener('click', function(event) {
+                if (event.target.classList.contains('modal')) {
+                    event.target.style.display = 'none';
+                }
+            });
+            
+            // 登录表单提交
+            document.getElementById('login-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                login();
+            });
+            
+            // 注册表单提交
+            document.getElementById('register-form').addEventListener('submit', function(e) {
+                e.preventDefault();
+                register();
+            });
+            
+            // 绑定发表帖子按钮事件
+            document.getElementById('submit-post').addEventListener('click', submitPost);
+        });
+    </script>
+</body>
+</html>

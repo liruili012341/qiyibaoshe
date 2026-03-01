@@ -1,0 +1,76 @@
+2026-03-01 17:49:44,028 - app - INFO - Application initialized and database created
+2026-03-01 17:49:44,097 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://192.168.0.103:8000
+2026-03-01 17:49:44,097 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-01 17:49:44,100 - werkzeug - INFO -  * Restarting with stat
+2026-03-01 17:49:44,479 - app - INFO - Application initialized and database created
+2026-03-01 17:49:44,521 - werkzeug - WARNING -  * Debugger is active!
+2026-03-01 17:49:44,524 - werkzeug - INFO -  * Debugger PIN: 708-984-687
+2026-03-01 18:09:02,700 - app - INFO - Application initialized and database created
+2026-03-01 18:09:02,752 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://192.168.0.103:8000
+2026-03-01 18:09:02,753 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-01 18:09:02,754 - werkzeug - INFO -  * Restarting with stat
+2026-03-01 18:09:03,145 - app - INFO - Application initialized and database created
+2026-03-01 18:09:03,177 - werkzeug - WARNING -  * Debugger is active!
+2026-03-01 18:09:03,179 - werkzeug - INFO -  * Debugger PIN: 708-984-687
+2026-03-01 18:09:09,323 - app - INFO - Request: GET / from 192.168.0.103
+2026-03-01 18:09:09,373 - app - INFO - Response: GET / 200
+2026-03-01 18:09:09,374 - werkzeug - INFO - 192.168.0.103 - - [01/Mar/2026 18:09:09] "GET / HTTP/1.1" 200 -
+2026-03-01 18:09:09,413 - app - INFO - Request: GET /static/styles.css from 192.168.0.103
+2026-03-01 18:09:09,414 - app - INFO - Response: GET /static/styles.css 200
+2026-03-01 18:09:09,415 - werkzeug - INFO - 192.168.0.103 - - [01/Mar/2026 18:09:09] "GET /static/styles.css HTTP/1.1" 200 -
+2026-03-01 18:09:09,673 - app - INFO - Request: GET /api/files from 192.168.0.103
+2026-03-01 18:09:09,674 - app - INFO - Request: GET /api/check-login from 192.168.0.103
+2026-03-01 18:09:09,675 - app - INFO - Response: GET /api/check-login 200
+2026-03-01 18:09:09,675 - app - INFO - Request: GET /api/ads from 192.168.0.103
+2026-03-01 18:09:09,676 - werkzeug - INFO - 192.168.0.103 - - [01/Mar/2026 18:09:09] "GET /api/check-login HTTP/1.1" 200 -
+2026-03-01 18:09:09,676 - app - INFO - Response: GET /api/files 200
+2026-03-01 18:09:09,677 - werkzeug - INFO - 192.168.0.103 - - [01/Mar/2026 18:09:09] "GET /api/files?security_code=114514 HTTP/1.1" 200 -
+2026-03-01 18:09:09,677 - app - INFO - Response: GET /api/ads 200
+2026-03-01 18:09:09,678 - werkzeug - INFO - 192.168.0.103 - - [01/Mar/2026 18:09:09] "GET /api/ads HTTP/1.1" 200 -
+2026-03-01 18:09:09,680 - app - INFO - Request: GET /api/files from 192.168.0.103
+2026-03-01 18:09:09,681 - app - INFO - Response: GET /api/files 200
+2026-03-01 18:09:09,684 - werkzeug - INFO - 192.168.0.103 - - [01/Mar/2026 18:09:09] "GET /api/files?security_code=114514 HTTP/1.1" 200 -
+2026-03-01 18:10:06,385 - app - INFO - Application initialized and database created
+2026-03-01 18:10:06,438 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://192.168.0.103:8000
+2026-03-01 18:10:06,439 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-01 18:10:06,441 - werkzeug - INFO -  * Restarting with stat
+2026-03-01 18:10:06,852 - app - INFO - Application initialized and database created
+2026-03-01 18:10:06,887 - werkzeug - WARNING -  * Debugger is active!
+2026-03-01 18:10:06,891 - werkzeug - INFO -  * Debugger PIN: 708-984-687
+2026-03-01 18:14:34,584 - app - INFO - Application initialized and database created
+2026-03-01 18:14:34,641 - werkzeug - INFO - [31m[1mWARNING: This is a development server. Do not use it in a production deployment. Use a production WSGI server instead.[0m
+ * Running on all addresses (0.0.0.0)
+ * Running on http://127.0.0.1:8000
+ * Running on http://192.168.0.103:8000
+2026-03-01 18:14:34,641 - werkzeug - INFO - [33mPress CTRL+C to quit[0m
+2026-03-01 18:14:34,643 - werkzeug - INFO -  * Restarting with stat
+2026-03-01 18:14:35,063 - app - INFO - Application initialized and database created
+2026-03-01 18:14:35,102 - werkzeug - WARNING -  * Debugger is active!
+2026-03-01 18:14:35,108 - werkzeug - INFO -  * Debugger PIN: 708-984-687
+2026-03-01 18:14:42,234 - app - INFO - Request: GET / from 127.0.0.1
+2026-03-01 18:14:42,282 - app - INFO - Response: GET / 200
+2026-03-01 18:14:42,282 - werkzeug - INFO - 127.0.0.1 - - [01/Mar/2026 18:14:42] "GET / HTTP/1.1" 200 -
+2026-03-01 18:14:42,303 - app - INFO - Request: GET /static/styles.css from 127.0.0.1
+2026-03-01 18:14:42,304 - app - INFO - Response: GET /static/styles.css 200
+2026-03-01 18:14:42,304 - werkzeug - INFO - 127.0.0.1 - - [01/Mar/2026 18:14:42] "GET /static/styles.css HTTP/1.1" 200 -
+2026-03-01 18:14:42,321 - app - INFO - Request: GET /api/files from 127.0.0.1
+2026-03-01 18:14:42,322 - app - INFO - Request: GET /api/ads from 127.0.0.1
+2026-03-01 18:14:42,323 - app - INFO - Request: GET /api/check-login from 127.0.0.1
+2026-03-01 18:14:42,323 - app - INFO - Response: GET /api/check-login 401
+2026-03-01 18:14:42,324 - app - INFO - Response: GET /api/files 200
+2026-03-01 18:14:42,324 - werkzeug - INFO - 127.0.0.1 - - [01/Mar/2026 18:14:42] "[31m[1mGET /api/check-login HTTP/1.1[0m" 401 -
+2026-03-01 18:14:42,324 - werkzeug - INFO - 127.0.0.1 - - [01/Mar/2026 18:14:42] "GET /api/files?security_code=114514 HTTP/1.1" 200 -
+2026-03-01 18:14:42,325 - app - INFO - Response: GET /api/ads 200
+2026-03-01 18:14:42,325 - werkzeug - INFO - 127.0.0.1 - - [01/Mar/2026 18:14:42] "GET /api/ads HTTP/1.1" 200 -
+2026-03-01 18:14:42,368 - app - INFO - Request: GET /@vite/client from 127.0.0.1
+2026-03-01 18:14:42,369 - app - INFO - Response: GET /@vite/client 404
+2026-03-01 18:14:42,369 - werkzeug - INFO - 127.0.0.1 - - [01/Mar/2026 18:14:42] "[33mGET /@vite/client HTTP/1.1[0m" 404 -

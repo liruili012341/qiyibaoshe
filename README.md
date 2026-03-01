@@ -36,7 +36,7 @@
 
 ### 安装步骤
 
-1. 克隆项目代码：
+1. 下载项目代码：
 https://github.com/liruili012341/qiyibaoshe/releases/download/%E4%B8%83%E4%B8%80%E6%8A%A5%E7%A4%BE2.9/qybs2.9.zip
 
 2. 安装依赖：
